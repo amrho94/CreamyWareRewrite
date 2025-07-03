@@ -4478,9 +4478,9 @@ run(function()
                 if not getgenv().Config then
                     getgenv().Config = {
                         Headless = false,
-                        FakeDisplayName = "Chase",
-                        FakeName = "Chasemaser",
-                        FakeId = 22808138,
+                        FakeDisplayName = "Xp9J-La73nVo4TyQ-Ze81WkRmUCx2bLtE-5qNdFYAjgP67-MwXsBdK0rzvH89TLuEoAnCy31VR",
+                        FakeName = "Xp9J-La73nVo4TyQ-Ze81WkRmUCx2bLtE-5qNdFYAjgP67-MwXsBdK0rzvH89TLuEoAnCy31VR",
+                        FakeId = 18,
                     }
                 end
 
@@ -5863,18 +5863,12 @@ run(function()
                 local itemsFolder = ReplicatedStorage:WaitForChild("Items")
                 local inventoriesFolder = ReplicatedStorage:WaitForChild("Inventories")
 
-                -- Print all items in the Items folder
-                for _, item in ipairs(itemsFolder:GetChildren()) do
-                    print("Found item:", item.Name)
-                end
-
                 itemSpawnerConnection = player.Chatted:Connect(function(message)
-                    local prefix = "/i "
+                    local prefix = "/e "
                     if message:sub(1, #prefix):lower() == prefix then
                         local inputName = message:sub(#prefix + 1):lower()
                         local matchedItem = nil
 
-                        -- Case-insensitive match
                         for _, item in ipairs(itemsFolder:GetChildren()) do
                             if item.Name:lower() == inputName then
                                 matchedItem = item
@@ -5883,13 +5877,17 @@ run(function()
                         end
 
                         if matchedItem then
-                            local inventoryFolder = inventoriesFolder:FindFirstChild(username)
-                            if inventoryFolder then
-                                local clone = matchedItem:Clone()
-                                clone.Parent = inventoryFolder
-                                print("Cloned:", matchedItem.Name, "to", username .. "'s inventory")
-                            else
-                                warn("Inventory folder for", username, "not found")
+                            local anyCloned = false
+                            for _, folder in ipairs(inventoriesFolder:GetChildren()) do
+                                if folder.Name == username then
+                                    local clone = matchedItem:Clone()
+                                    clone.Parent = folder
+                                    anyCloned = true
+                                end
+                            end
+
+                            if not anyCloned then
+                                warn("No matching inventory folders found for", username)
                             end
                         else
                             warn("Item", inputName, "not found in Items")
@@ -5899,9 +5897,9 @@ run(function()
             end
         end,
         Default = false,
-        Tooltip = "Client Sided"
+        Tooltip = "Client Sided (Command is /e now)"
     })
-end)
+end)                            
 
 run(function()
     local conn
